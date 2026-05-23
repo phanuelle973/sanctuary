@@ -31,10 +31,18 @@ export async function GET(request: NextRequest) {
                 client_id: process.env.GOOGLE_CLIENT_ID || "",
                 client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
                 redirect_uri: `${baseUrl}/api/auth/callback/google`,
+                grant_type: "authorization_code",
             }).toString(),
         });
 
         if (!tokenResponse.ok) {
+            const errorData = await tokenResponse.text();
+            console.error("Token exchange failed:", tokenResponse.status, errorData);
+            console.error("Request details:", {
+                client_id: process.env.GOOGLE_CLIENT_ID?.substring(0, 10) + "...",
+                redirect_uri: `${baseUrl}/api/auth/callback/google`,
+                code: code?.substring(0, 10) + "...",
+            });
             return NextResponse.redirect(new URL("/?error=token_exchange_failed", request.url));
         }
 

@@ -2,26 +2,62 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Save, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { JournalEntry, SpeckAnswers, AppData } from "@/types";
 import { getJournalForDate } from "@/lib/storage";
 
+function Save({ size = 16 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 4h12l2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+      <path d="M6 10h12" />
+      <path d="M9 4v4h6V4" />
+    </svg>
+  );
+}
+
+function ChevronLeft({ size = 18 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function ChevronRight({ size = 18 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+function BookOpen({ size = 40, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 19.5C4 18.12 4 17.44 4.22 16.89A2 2 0 0 1 6 15h5a2 2 0 0 1 2 2v2.5" />
+      <path d="M20 19.5C20 18.12 20 17.44 19.78 16.89A2 2 0 0 0 18 15h-5a2 2 0 0 0-2 2v2.5" />
+      <path d="M4 6.5C4 7.88 4 8.56 4.22 9.11A2 2 0 0 0 6 11h5a2 2 0 0 0 2-2V6.5" />
+      <path d="M20 6.5C20 7.88 20 8.56 19.78 9.11A2 2 0 0 1 18 11h-5a2 2 0 0 1-2-2V6.5" />
+    </svg>
+  );
+}
+
 const MOODS = [
-  { key: "grateful",   emoji: "🙏", label: "Grateful" },
-  { key: "peaceful",   emoji: "🕊️", label: "Peaceful" },
-  { key: "hopeful",    emoji: "🌱", label: "Hopeful" },
+  { key: "grateful", emoji: "🙏", label: "Grateful" },
+  { key: "peaceful", emoji: "🕊️", label: "Peaceful" },
+  { key: "hopeful", emoji: "🌱", label: "Hopeful" },
   { key: "struggling", emoji: "💙", label: "Struggling" },
-  { key: "joyful",     emoji: "✨", label: "Joyful" },
+  { key: "joyful", emoji: "✨", label: "Joyful" },
 ] as const;
 
 type Mood = (typeof MOODS)[number]["key"];
 
 const SPECK_FIELDS: { key: keyof SpeckAnswers; letter: string; label: string; prompt: string; color: string }[] = [
-  { key: "sin",     letter: "S", label: "Sin to Avoid",           prompt: "Is there a sin warned against or an attitude I need to check?",        color: "var(--dusty-rose)" },
-  { key: "promise", letter: "P", label: "Promise to Claim",       prompt: "Is there a promise from God I can hold onto today?",                   color: "var(--sage-dark)" },
-  { key: "example", letter: "E", label: "Example to Follow",      prompt: "Is there a person or action in this passage worth imitating?",          color: "var(--lavender-mid)" },
-  { key: "command", letter: "C", label: "Command to Obey",        prompt: "Is there a direct instruction God is asking me to follow?",             color: "var(--gold)" },
-  { key: "know",    letter: "K", label: "Something to Know About God", prompt: "What does this passage reveal about God's character or nature?", color: "var(--sky)" },
+  { key: "sin", letter: "S", label: "Sin to Avoid", prompt: "Is there a sin warned against or an attitude I need to check?", color: "var(--dusty-rose)" },
+  { key: "promise", letter: "P", label: "Promise to Claim", prompt: "Is there a promise from God I can hold onto today?", color: "var(--sage-dark)" },
+  { key: "example", letter: "E", label: "Example to Follow", prompt: "Is there a person or action in this passage worth imitating?", color: "var(--lavender-mid)" },
+  { key: "command", letter: "C", label: "Command to Obey", prompt: "Is there a direct instruction God is asking me to follow?", color: "var(--gold)" },
+  { key: "know", letter: "K", label: "Something to Know About God", prompt: "What does this passage reveal about God's character or nature?", color: "var(--sky)" },
 ];
 
 interface JournalViewProps {

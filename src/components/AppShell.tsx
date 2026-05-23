@@ -2,16 +2,43 @@
 
 import { useState } from "react";
 import { useAppData } from "@/hooks/useAppData";
+import { useSession } from "@/lib/auth-client";
 import Nav, { Tab } from "@/components/ui/Nav";
 import HomeView from "@/components/tracker/HomeView";
 import JournalView from "@/components/journal/JournalView";
 import PlannerView from "@/components/planner/PlannerView";
 import GoalsView from "@/components/tracker/GoalsView";
+import LoginView from "@/components/auth/LoginView";
 
 export default function AppShell() {
   const [tab, setTab] = useState<Tab>("home");
   const [journalDefaultTime, setJournalDefaultTime] = useState<"morning" | "evening">("morning");
+  const { data: session, isPending } = useSession();
   const appData = useAppData();
+
+  // Show loading while checking auth
+  if (isPending) {
+    return (
+      <div style={{
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "1rem",
+      }}>
+        <span style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontStyle: "italic", color: "var(--dusty-rose)" }}>
+          Sanctuary
+        </span>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Loading…</p>
+      </div>
+    );
+  }
+
+  // Show login if not authenticated
+  if (!session) {
+    return <LoginView />;
+  }
 
   if (!appData.isLoaded || !appData.data) {
     return (

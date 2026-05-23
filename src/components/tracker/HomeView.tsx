@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Flame, BookOpen, PenLine, CheckCircle2 } from "lucide-react";
+import { Flame, BookOpen, CheckCircle2 } from "lucide-react";
 import { getDailyVerse } from "@/lib/bible";
 import { AppData } from "@/types";
 import { getJournalForDate } from "@/lib/storage";
@@ -27,8 +27,8 @@ export default function HomeView({ data, onNavigate, onOpenJournal }: HomeViewPr
   const greeting = isMorning
     ? "Good morning"
     : today.getHours() < 17
-    ? "Good afternoon"
-    : "Good evening";
+      ? "Good afternoon"
+      : "Good evening";
 
   return (
     <div className="page">

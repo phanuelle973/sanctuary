@@ -5,7 +5,7 @@ import { Flame, BookOpen, PenLine, CheckCircle2 } from "lucide-react";
 import { getDailyVerse } from "@/lib/bible";
 import { AppData } from "@/types";
 import { getJournalForDate } from "@/lib/storage";
-import type { Tab } from "./Nav";
+import type { Tab } from "@/components/ui/Nav";
 
 interface HomeViewProps {
   data: AppData;

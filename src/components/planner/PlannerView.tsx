@@ -15,7 +15,7 @@ interface PlannerViewProps {
 
 export default function PlannerView({ data, onMarkReading, onSetPlan, onAdvanceDay }: PlannerViewProps) {
   const [view, setView] = useState<"plan" | "log" | "choose">("plan");
-  const [logBook, setLogBook] = useState(BIBLE_BOOKS[0].name);
+  const [logBook, setLogBook] = useState<string>(BIBLE_BOOKS[0].name);
   const [logChapter, setLogChapter] = useState(1);
   const [logNotes, setLogNotes] = useState("");
   const [saved, setSaved] = useState(false);

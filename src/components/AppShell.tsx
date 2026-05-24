@@ -68,9 +68,10 @@ export default function AppShell() {
             data={appData.data || {
               streak: 0,
               readingEntries: [],
-              journals: [],
+              journalEntries: [],
               goals: [],
               readingPlan: null,
+              lastReadDate: null,
             }}
             onNavigate={setTab}
             onOpenJournal={openJournal}

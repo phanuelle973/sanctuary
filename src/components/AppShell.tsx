@@ -78,7 +78,7 @@ export default function AppShell() {
             isGuest={true}
           />
         )}
-        <Nav active={tab} onChange={setTab} session={session} isGuest={true} />
+        <Nav active={tab} onChange={setTab} isGuest={true} />
       </>
     );
   }

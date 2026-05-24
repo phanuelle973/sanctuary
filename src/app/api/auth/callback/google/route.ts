@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.redirect(new URL("/?error=token_exchange_failed", request.url));
         }
 
-        const { access_token, id_token } = await tokenResponse.json();
+        const { access_token } = await tokenResponse.json();
 
         // Get user info
         const userResponse = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {

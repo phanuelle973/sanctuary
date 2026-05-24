@@ -8,7 +8,6 @@ import HomeView from "@/components/tracker/HomeView";
 import JournalView from "@/components/journal/JournalView";
 import PlannerView from "@/components/planner/PlannerView";
 import GoalsView from "@/components/tracker/GoalsView";
-import LoginView from "@/components/auth/LoginView";
 
 export default function AppShell() {
   const [tab, setTab] = useState<Tab>("home");

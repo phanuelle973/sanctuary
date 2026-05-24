@@ -9,7 +9,7 @@ export type Tab = "home" | "journal" | "planner" | "goals";
 interface NavProps {
   active: Tab;
   onChange: (tab: Tab) => void;
-  session?: any;
+  session?: { user: { id: string; email: string; name: string } };
   isGuest?: boolean;
 }
 
@@ -20,7 +20,7 @@ const items: { id: Tab; label: string; Icon: React.ElementType }[] = [
   { id: "goals", label: "Goals", Icon: Target },
 ];
 
-export default function Nav({ active, onChange, session, isGuest }: NavProps) {
+export default function Nav({ active, onChange, isGuest }: NavProps) {
   const [signingOut, setSigningOut] = useState(false);
 
   const handleSignOut = async () => {

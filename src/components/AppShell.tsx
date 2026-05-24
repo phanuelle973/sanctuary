@@ -35,12 +35,7 @@ export default function AppShell() {
     );
   }
 
-  // Show login if not authenticated
-  if (!session) {
-    return <LoginView />;
-  }
-
-  if (!appData.isLoaded || !appData.data) {
+  if (!appData.isLoaded || (!session && !appData.data)) {
     return (
       <div style={{
         minHeight: "100dvh",
@@ -53,7 +48,9 @@ export default function AppShell() {
         <span style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontStyle: "italic", color: "var(--dusty-rose)" }}>
           Sanctuary
         </span>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Loading your practice…</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          {session ? "Loading your practice…" : "Welcome to Sanctuary"}
+        </p>
       </div>
     );
   }
@@ -63,6 +60,29 @@ export default function AppShell() {
     setTab("journal");
   }
 
+  // Show limited UI for unauthenticated users
+  if (!session || !appData.data) {
+    return (
+      <>
+        {tab === "home" && (
+          <HomeView
+            data={appData.data || {
+              streak: 0,
+              readingEntries: [],
+              journals: [],
+              goals: [],
+              readingPlan: null,
+            }}
+            onNavigate={setTab}
+            onOpenJournal={openJournal}
+            isGuest={true}
+          />
+        )}
+        <Nav active={tab} onChange={setTab} session={session} isGuest={true} />
+      </>
+    );
+  }
+
   return (
     <>
       {tab === "home" && (
@@ -70,6 +90,7 @@ export default function AppShell() {
           data={appData.data}
           onNavigate={setTab}
           onOpenJournal={openJournal}
+          isGuest={false}
         />
       )}
       {tab === "journal" && (
@@ -97,7 +118,7 @@ export default function AppShell() {
         />
       )}
 
-      <Nav active={tab} onChange={setTab} />
+      <Nav active={tab} onChange={setTab} session={session} isGuest={false} />
     </>
   );
 }

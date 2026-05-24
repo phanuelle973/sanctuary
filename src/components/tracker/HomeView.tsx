@@ -11,9 +11,10 @@ interface HomeViewProps {
   data: AppData;
   onNavigate: (tab: Tab) => void;
   onOpenJournal: (time: "morning" | "evening") => void;
+  isGuest?: boolean;
 }
 
-export default function HomeView({ data, onNavigate, onOpenJournal }: HomeViewProps) {
+export default function HomeView({ data, onNavigate, onOpenJournal, isGuest }: HomeViewProps) {
   const today = new Date();
   const todayStr = format(today, "yyyy-MM-dd");
   const verse = getDailyVerse(today);
@@ -29,6 +30,10 @@ export default function HomeView({ data, onNavigate, onOpenJournal }: HomeViewPr
     : today.getHours() < 17
       ? "Good afternoon"
       : "Good evening";
+
+  const handleGuestClick = () => {
+    window.location.href = "/api/auth/signin/google";
+  };
 
   return (
     <div className="page">
@@ -69,19 +74,22 @@ export default function HomeView({ data, onNavigate, onOpenJournal }: HomeViewPr
               label="Morning Journal"
               done={!!journals.morning}
               icon="🌅"
-              onClick={() => onOpenJournal("morning")}
+              onClick={() => isGuest ? handleGuestClick() : onOpenJournal("morning")}
+              disabled={isGuest}
             />
             <CheckCard
               label="Evening Journal"
               done={!!journals.evening}
               icon="🌙"
-              onClick={() => onOpenJournal("evening")}
+              onClick={() => isGuest ? handleGuestClick() : onOpenJournal("evening")}
+              disabled={isGuest}
             />
             <CheckCard
               label="Reading"
               done={todayReadings.length > 0}
               icon="📖"
-              onClick={() => onNavigate("planner")}
+              onClick={() => isGuest ? handleGuestClick() : onNavigate("planner")}
+              disabled={isGuest}
             />
             <CheckCard
               label="On Track"
@@ -150,21 +158,23 @@ export default function HomeView({ data, onNavigate, onOpenJournal }: HomeViewPr
 }
 
 function CheckCard({
-  label, done, icon, onClick, static: isStatic,
+  label, done, icon, onClick, static: isStatic, disabled,
 }: {
-  label: string; done: boolean; icon: string; onClick?: () => void; static?: boolean;
+  label: string; done: boolean; icon: string; onClick?: () => void; static?: boolean; disabled?: boolean;
 }) {
   return (
     <button
       className="card"
       onClick={onClick}
+      disabled={disabled}
       style={{
         textAlign: "left",
-        cursor: isStatic ? "default" : "pointer",
+        cursor: isStatic || disabled ? "default" : "pointer",
         border: done ? "1.5px solid var(--sage)" : "1px solid var(--border)",
         background: done ? "rgba(181, 196, 168, 0.15)" : "var(--surface)",
         padding: "1rem",
         display: "flex",
+        opacity: disabled ? 0.6 : 1,
         flexDirection: "column",
         gap: "0.5rem",
       }}
